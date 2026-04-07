@@ -25,16 +25,16 @@ import static net.notnightsky.skyutils.utils.pingColorHelper.pingColor;
 @Mixin(PlayerEntityRenderer.class)
 public class PlayerEntityRendererMixin {
     @WrapOperation(method = "renderLabelIfPresent(Lnet/minecraft/client/render/entity/state/PlayerEntityRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;Lnet/minecraft/client/render/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;submitLabel(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/math/Vec3d;ILnet/minecraft/text/Text;ZIDLnet/minecraft/client/render/state/CameraRenderState;)V"))
-    private void skyutils$modifyLabel(OrderedRenderCommandQueue queue, MatrixStack matrices, Vec3d pos, int light, Text text, boolean isSneaking, int backgroundColor, double squaredDistance, CameraRenderState camera, Operation<Void> original, PlayerEntityRenderState state){
+    private void skyutils$modifyLabel(OrderedRenderCommandQueue queue, MatrixStack matrices, Vec3d pos, int light, Text text, boolean isSneaking, int backgroundColor, double squaredDistance, CameraRenderState camera, Operation<Void> original, PlayerEntityRenderState state) {
         float health = ((PlayerHealthInterface) state).skyutils$getHealth();
         int latency = ((PlayerLatencyInterface) state).skyutils$getLatency();
 
         String color = pingColor(latency);
 
         Text modified;
-        if (modConfig.showHealth && !modConfig.showPing){
+        if (modConfig.showHealth && !modConfig.showPing) {
             modified = text.copy().append(" §c[" + Math.round(health) + "❤] ");
-        } else if (!modConfig.showHealth && modConfig.showPing){
+        } else if (!modConfig.showHealth && modConfig.showPing) {
             modified = text.copy().append(color + "[" + latency + "]");
         } else if (modConfig.showPing && modConfig.showHealth) {
             modified = text.copy().append(" §c[" + Math.round(health) + "❤] " + color + "[" + latency + "]");

@@ -14,7 +14,6 @@
     "PlayerEntityRendererMixin",
     "PlayerEntityRenderStateMixin",
     "ShieldModelRendererMixin",
-    "TitleScreenMixin",
     "WorldRendererMixin"
   ],
   "injectors": {

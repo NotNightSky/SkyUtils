@@ -39,9 +39,6 @@ public class modConfig {
     public static double pumpkinOverlayOpacity = 0;
 
     @SerialEntry
-    public static boolean skyutilsTitleScreen = false;
-
-    @SerialEntry
     public static double shieldTranslate = 0.23;
 
     @SerialEntry
