@@ -19,6 +19,7 @@ public class toggleHandler {
                 }
             }
 
+
             if (openMenu.wasPressed()) {
                 Screen configScreen = modConfig.openConfigScreen(MinecraftClient.getInstance().currentScreen);
                 MinecraftClient.getInstance().setScreen(configScreen);

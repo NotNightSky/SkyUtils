@@ -6,9 +6,11 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.notnightsky.skyutils.SkyutilsClient;
 import net.notnightsky.skyutils.config.keyBindingHelper.toggleHandler;
 import net.notnightsky.skyutils.modules.discordRpc.IPCManager;
 import net.notnightsky.skyutils.modules.zoom.InterpolationMode;
@@ -96,7 +98,7 @@ public class modConfig {
     public static boolean furnaceToolTip = false;
 
     public static Screen openConfigScreen(Screen parent) {
-        return YetAnotherConfigLib.createBuilder()
+        var builder = YetAnotherConfigLib.createBuilder()
                 .title(Text.literal("SkyUtils"))
                 .category(ConfigCategory.createBuilder()
                         .name(Text.translatable(LOCAL_NAMESPACE_PATH + "group.world"))
@@ -337,7 +339,21 @@ public class modConfig {
                 .save(() -> {
                     modConfig.HANDLER.save();
                     IPCManager.reload();
-                })
-                .build().generateScreen(parent);
+                });
+
+        if(SkyutilsClient.isDevEnv){
+            builder.category(ConfigCategory.createBuilder()
+                            .name(Text.translatable("group.dev.name"))
+                            .tooltip(Text.translatable("group.dev.tooltip"))
+                            .option(ButtonOption.createBuilder()
+                                    .name(Text.literal("Hud Editor"))
+                                    .action((yaclScreen, thisOption) -> {
+//                                        MinecraftClient.getInstance().setScreen(new HudEditorScreen(openConfigScreen(parent)));
+                                    })
+                                    .build())
+                    .build());
+        }
+
+        return builder.build().generateScreen(parent);
     }
 }

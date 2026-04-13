@@ -5,6 +5,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
 
+import net.notnightsky.skyutils.SkyutilsClient;
 import org.lwjgl.glfw.GLFW;
 
 public class keyBinding {
@@ -13,6 +14,7 @@ public class keyBinding {
     public static KeyBinding incrementFullBright;
     public static KeyBinding decrementFullBright;
     public static KeyBinding zoomKey;
+    public static KeyBinding hudEditorKey;
     public static boolean loaded = false;
 
     public static void registerKeybinds(){
@@ -51,5 +53,14 @@ public class keyBinding {
                 GLFW.GLFW_KEY_KP_SUBTRACT,
                 skyutilsCategory
         ));
+
+        if (SkyutilsClient.isDevEnv){
+            hudEditorKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                    "key.skyutils.hudEditorKey",
+                    InputUtil.Type.KEYSYM,
+                    GLFW.GLFW_KEY_H,
+                    skyutilsCategory
+            ));
+        }
     }
 }
