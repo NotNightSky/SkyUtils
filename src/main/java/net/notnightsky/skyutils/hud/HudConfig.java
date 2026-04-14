@@ -1,15 +1,20 @@
 package net.notnightsky.skyutils.hud;
 
-import net.minecraft.util.Colors;
-
 public class HudConfig {
     /*This is a temporary config used to implement hud configs temporarily.
     * This in no particular manner mean that the default config is being discontinued.
     * Any further changes will be announced in the github page*/
 
-    public static int backgroundColor = -1873784752; // vanilla debug gray
+    private static int backgroundColor = -1873784752;
+    private static int textColor = net.minecraft.util.Colors.LIGHTER_GRAY;
+    private static boolean textShadow = false;
 
-    public static int textColor = Colors.LIGHTER_GRAY;
+    public static int getBackgroundColor() { return backgroundColor; }
+    public static void setBackgroundColor(int color) { backgroundColor = color; }
 
-    public static boolean textShadow = false;
+    public static int getTextColor() { return textColor; }
+    public static void setTextColor(int color) { textColor = color; }
+
+    public static boolean isTextShadow() { return textShadow; }
+    public static void setTextShadow(boolean shadow) { textShadow = shadow; }
 }

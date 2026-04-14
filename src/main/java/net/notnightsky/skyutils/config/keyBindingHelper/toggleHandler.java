@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.notnightsky.skyutils.config.modConfig;
+import net.notnightsky.skyutils.hud.screen.HudEditorScreen;
 
 import static net.notnightsky.skyutils.config.keyBindingHelper.keyBinding.*;
 import static net.notnightsky.skyutils.modules.fullbright.fullBright.*;
@@ -19,6 +20,9 @@ public class toggleHandler {
                 }
             }
 
+            if (hudEditorKey.wasPressed()){
+                MinecraftClient.getInstance().setScreen(new HudEditorScreen(MinecraftClient.getInstance().currentScreen));
+            }
 
             if (openMenu.wasPressed()) {
                 Screen configScreen = modConfig.openConfigScreen(MinecraftClient.getInstance().currentScreen);

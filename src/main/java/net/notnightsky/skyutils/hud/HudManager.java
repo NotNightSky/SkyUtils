@@ -1,11 +1,10 @@
 package net.notnightsky.skyutils.hud;
 
-
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class HudManager {
@@ -34,11 +33,24 @@ public class HudManager {
     }
 
     /**
+     * Get all active elements
+     */
+    public static Collection<HudElement> getAll() {
+        return elements.values();
+    }
+
+    /**
      * Render all enabled HUD elements.
      */
     public static void renderAll(DrawContext context, float deltaTicks) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        int screenWidth = client.getWindow().getScaledWidth();
+        int screenHeight = client.getWindow().getScaledHeight();
+
         for (HudElement element : elements.values()) {
             if (element.isEnabled()) {
+                element.setX(Math.clamp(element.getX(), 3, screenWidth - element.getWidth() - 3));
+                element.setY(Math.clamp(element.getY(), 3, screenHeight - element.getHeight() - 3));
                 element.render(context, deltaTicks);
             }
         }

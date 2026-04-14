@@ -12,6 +12,7 @@ import net.minecraft.util.Identifier;
 import net.notnightsky.skyutils.config.keyBindingHelper.keyBinding;
 import net.notnightsky.skyutils.config.keyBindingHelper.toggleHandler;
 import net.notnightsky.skyutils.config.modConfig;
+import net.notnightsky.skyutils.hud.HudElement;
 import net.notnightsky.skyutils.hud.HudManager;
 import net.notnightsky.skyutils.hud.elements.CoordinateElement;
 import net.notnightsky.skyutils.hud.elements.FpsElement;
@@ -43,13 +44,21 @@ public class SkyutilsClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             new fullBright().noDarknessEffect();
         });
+
         HudManager.register(new FpsElement());
         HudManager.register(new CoordinateElement());
         HudManager.register(new SpeedElement());
+
+        for (HudElement element : HudManager.getAll()) {
+            int[] pos = modConfig.getHudPosition(element.getId(), element.getX(), element.getY());
+            element.setX(pos[0]);
+            element.setY(pos[1]);
+        }
+
         HudElementRegistry.attachElementBefore(
                 VanillaHudElements.CHAT,
                 Identifier.of("skyutils", "hud"),
-                (graphics, tickCounter) -> HudManager.renderAll(graphics, tickCounter.getFixedDeltaTicks())
+                (context, tickCounter) -> HudManager.renderAll(context, tickCounter.getFixedDeltaTicks())
         );
     }
 }

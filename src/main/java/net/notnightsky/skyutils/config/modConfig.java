@@ -12,10 +12,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.notnightsky.skyutils.SkyutilsClient;
 import net.notnightsky.skyutils.config.keyBindingHelper.toggleHandler;
+import net.notnightsky.skyutils.hud.screen.HudEditorScreen;
 import net.notnightsky.skyutils.modules.discordRpc.IPCManager;
 import net.notnightsky.skyutils.modules.zoom.InterpolationMode;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class modConfig {
     private static final String LOCAL_NAMESPACE_PATH = "skyutils.yacl.";
@@ -27,6 +30,17 @@ public class modConfig {
                     .setJson5(true)
                     .build())
             .build();
+
+    @SerialEntry
+    public static Map<String, int[]> hudPositions = new HashMap<>();
+
+    public static void setHudPosition(String id, int x, int y) {
+        hudPositions.put(id, new int[]{x, y});
+    }
+
+    public static int[] getHudPosition(String id, int defaultX, int defaultY) {
+        return hudPositions.getOrDefault(id, new int[]{defaultX, defaultY});
+    }
 
     @SerialEntry
     public static InterpolationMode interpolationType = InterpolationMode.LOGARITHMIC;
@@ -348,10 +362,11 @@ public class modConfig {
                             .option(ButtonOption.createBuilder()
                                     .name(Text.literal("Hud Editor"))
                                     .action((yaclScreen, thisOption) -> {
-//                                        MinecraftClient.getInstance().setScreen(new HudEditorScreen(openConfigScreen(parent)));
+                                        MinecraftClient.getInstance().setScreen(new HudEditorScreen(openConfigScreen(parent)));
                                     })
                                     .build())
                     .build());
+
         }
 
         return builder.build().generateScreen(parent);

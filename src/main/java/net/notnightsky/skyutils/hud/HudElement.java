@@ -2,29 +2,32 @@ package net.notnightsky.skyutils.hud;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.util.Colors;
 
 public interface HudElement {
     void render(DrawContext context, float deltaTicks);
     int getX();
     int getY();
+    void setX(int x);
+    void setY(int y);
+    int getWidth();
     boolean isEnabled();
     String getId();
+    String getPlaceholderText();
 
-    // Optional per-element overrides, fall back to global by default
-    default int getBackgroundColor() { return HudConfig.backgroundColor; }
-    default int getTextColor() { return HudConfig.textColor; }
-    default boolean hasShadow() { return HudConfig.textShadow; }
+    default int getHeight() {
+        return 9;
+    }
 
-    // Shared helper so every element doesn't repeat this logic
     default void drawBackground(DrawContext context, int textWidth) {
         context.fill(
                 getX() - 1, getY() - 1,
-                getX() + textWidth + 1, getY() + 8,
-                getBackgroundColor()
+                getX() + textWidth + 1, getY() + getHeight(),
+                -1873784752
         );
     }
 
     default void drawText(DrawContext context, TextRenderer textRenderer, String text) {
-        context.drawText(textRenderer, text, getX(), getY(), getTextColor(), hasShadow());
+        context.drawText(textRenderer, text, getX(), getY(), Colors.LIGHTER_GRAY, false);
     }
 }
