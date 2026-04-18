@@ -1,4 +1,4 @@
-package net.notnightsky.skyutils.hud;
+package net.notnightsky.skyutils.gui.hud;
 
 public class HudConfig {
     /*This is a temporary config used to implement hud configs temporarily.

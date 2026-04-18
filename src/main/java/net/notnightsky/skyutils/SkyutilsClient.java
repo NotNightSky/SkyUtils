@@ -2,7 +2,6 @@ package net.notnightsky.skyutils;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.loader.api.FabricLoader;
@@ -12,11 +11,11 @@ import net.minecraft.util.Identifier;
 import net.notnightsky.skyutils.config.keyBindingHelper.keyBinding;
 import net.notnightsky.skyutils.config.keyBindingHelper.toggleHandler;
 import net.notnightsky.skyutils.config.modConfig;
-import net.notnightsky.skyutils.hud.HudElement;
-import net.notnightsky.skyutils.hud.HudManager;
-import net.notnightsky.skyutils.hud.elements.CoordinateElement;
-import net.notnightsky.skyutils.hud.elements.FpsElement;
-import net.notnightsky.skyutils.hud.elements.SpeedElement;
+import net.notnightsky.skyutils.gui.hud.HudElement;
+import net.notnightsky.skyutils.gui.hud.HudManager;
+import net.notnightsky.skyutils.gui.hud.elements.CoordinateElement;
+import net.notnightsky.skyutils.gui.hud.elements.FpsElement;
+import net.notnightsky.skyutils.gui.hud.elements.SpeedElement;
 import net.notnightsky.skyutils.modmenu.modMenuIntegration;
 import net.notnightsky.skyutils.modules.discordRpc.IPCManager;
 import net.notnightsky.skyutils.modules.fullbright.fullBright;
@@ -25,10 +24,6 @@ import org.slf4j.LoggerFactory;
 
 public class SkyutilsClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("SkyUtils");
-    public static final String modID = "skyutils";
-    public static final String modName = "SkyUtils";
-    public static final String modVersion = "1.3.1";
-    public static final String mcVer = "[" + MinecraftClient.getInstance().getGameVersion() + " " + SharedConstants.getGameVersion().id() + "]";
     public static boolean isDevEnv;
 
     @Override
@@ -53,6 +48,7 @@ public class SkyutilsClient implements ClientModInitializer {
             int[] pos = modConfig.getHudPosition(element.getId(), element.getX(), element.getY());
             element.setX(pos[0]);
             element.setY(pos[1]);
+            element.setEnabled(modConfig.getHudElementEnabled(element.getId(), element.isEnabled()));
         }
 
         HudElementRegistry.attachElementBefore(

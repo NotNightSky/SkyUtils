@@ -1,4 +1,4 @@
-package net.notnightsky.skyutils.hud;
+package net.notnightsky.skyutils.gui.hud;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -12,12 +12,11 @@ public interface HudElement {
     void setY(int y);
     int getWidth();
     boolean isEnabled();
+    void setEnabled(boolean enabled);
     String getId();
     String getPlaceholderText();
 
-    default int getHeight() {
-        return 9;
-    }
+    default int getHeight() { return 9; }
 
     default void drawBackground(DrawContext context, int textWidth) {
         context.fill(

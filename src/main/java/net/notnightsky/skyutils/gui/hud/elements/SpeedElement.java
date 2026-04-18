@@ -1,11 +1,11 @@
-package net.notnightsky.skyutils.hud.elements;
+package net.notnightsky.skyutils.gui.hud.elements;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
-import net.notnightsky.skyutils.hud.HudElement;
+import net.notnightsky.skyutils.gui.hud.HudElement;
 
 public class SpeedElement implements HudElement {
 
@@ -13,6 +13,7 @@ public class SpeedElement implements HudElement {
     private int x = 2;
     private int y = 31;
     private double speed = 0;
+    private boolean enabled = true;
 
     private String getText() {
         return String.format("Speed %.2f b/s", speed);
@@ -39,7 +40,8 @@ public class SpeedElement implements HudElement {
     @Override public int getY() { return y; }
     @Override public void setX(int x) { this.x = x; }
     @Override public void setY(int y) { this.y = y; }
-    @Override public boolean isEnabled() { return true; }
+    @Override public boolean isEnabled() { return enabled; }
+    @Override public void setEnabled(boolean enabled) { this.enabled = enabled; }
     @Override public String getId() { return "skyutils:speed"; }
     @Override public String getPlaceholderText() { return "Speed 4.35 b/s"; }
 }

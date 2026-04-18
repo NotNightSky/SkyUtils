@@ -1,4 +1,4 @@
-package net.notnightsky.skyutils.hud.screen;
+package net.notnightsky.skyutils.gui.screen;
 
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
@@ -6,10 +6,12 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.notnightsky.skyutils.config.modConfig;
-import net.notnightsky.skyutils.hud.HudElement;
-import net.notnightsky.skyutils.hud.HudManager;
+import net.notnightsky.skyutils.gui.hud.HudElement;
+import net.notnightsky.skyutils.gui.hud.HudManager;
+import net.notnightsky.skyutils.gui.screen.menus.DropdownMenu;
 import net.notnightsky.skyutils.utils.Rectangle;
 import net.notnightsky.skyutils.utils.SnappingHelper;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ public class HudEditorScreen extends Screen {
     private String dragging = null;
     private int dragOffsetX, dragOffsetY;
     private SnappingHelper snappingHelper;
+    private DropdownMenu activeDropdown = null;
 
     public HudEditorScreen(Screen parent) {
         super(Text.literal("HUD Editor"));
@@ -34,17 +37,14 @@ public class HudEditorScreen extends Screen {
 
     private List<Rectangle> getSnapRects(String excludeId) {
         List<Rectangle> rects = new ArrayList<>();
-
-        rects.add(new Rectangle(0, 0, width, 0));               // top edge
-        rects.add(new Rectangle(0, height, width, 0));          // bottom edge
-        rects.add(new Rectangle(0, 0, 0, height));              // left edge
-        rects.add(new Rectangle(width, 0, 0, height));          // right edge
-
+        rects.add(new Rectangle(0, 0, width, 0));
+        rects.add(new Rectangle(0, height, width, 0));
+        rects.add(new Rectangle(0, 0, 0, height));
+        rects.add(new Rectangle(width, 0, 0, height));
         for (HudElement element : HudManager.getAll()) {
             if (!element.getId().equals(excludeId)) {
                 rects.add(new Rectangle(
-                        element.getX(),
-                        element.getY(),
+                        element.getX(), element.getY(),
                         client.textRenderer.getWidth(element.getPlaceholderText()),
                         element.getHeight()
                 ));
@@ -55,8 +55,7 @@ public class HudEditorScreen extends Screen {
 
     private Rectangle getElementRect(HudElement element) {
         return new Rectangle(
-                element.getX(),
-                element.getY(),
+                element.getX(), element.getY(),
                 client.textRenderer.getWidth(element.getPlaceholderText()),
                 element.getHeight()
         );
@@ -75,8 +74,13 @@ public class HudEditorScreen extends Screen {
             snappingHelper.renderSnaps(context);
         }
 
+        // Render dropdown on top of everything
+        if (activeDropdown != null) {
+            activeDropdown.render(context, mouseX, mouseY);
+        }
+
         String title = "HUD Editor";
-        String hint = "Escape to save";
+        String hint = "Drag to reposition and Right-click to open options";
         context.drawText(client.textRenderer, title,
                 width / 2 - client.textRenderer.getWidth(title) / 2, 5, Colors.WHITE, false);
         context.drawText(client.textRenderer, hint,
@@ -88,12 +92,23 @@ public class HudEditorScreen extends Screen {
     private void renderPlaceholder(DrawContext context, HudElement element) {
         String text = element.getPlaceholderText();
         int textWidth = client.textRenderer.getWidth(text);
+
+        // Gray out disabled elements
+        int bgColor = element.isEnabled() ? -1873784752 : 0x80333333;
+        int textColor = element.isEnabled() ? Colors.LIGHTER_GRAY : 0xFF666666;
+
         context.fill(
                 element.getX() - 1, element.getY() - 1,
                 element.getX() + textWidth + 1, element.getY() + element.getHeight(),
-                -1873784752
+                bgColor
         );
-        context.drawText(client.textRenderer, text, element.getX(), element.getY(), Colors.LIGHTER_GRAY, false);
+        context.drawText(client.textRenderer, text, element.getX(), element.getY(), textColor, false);
+
+        if (!element.isEnabled()) {
+            String disabledLabel = "[disabled]";
+            context.drawText(client.textRenderer, disabledLabel,
+                    element.getX(), element.getY() + element.getHeight() + 2, 0xFF666666, false);
+        }
     }
 
     private void drawHighlight(DrawContext context, HudElement element, int mouseX, int mouseY) {
@@ -105,7 +120,7 @@ public class HudEditorScreen extends Screen {
         boolean hovered = isHovered(element, mouseX, mouseY);
         boolean isDragging = element.getId().equals(dragging);
 
-        int borderColor = isDragging ? 0xFFFFAA00 : hovered ? 0xFFFFFFFF : 0x80FFFFFF;
+        int borderColor = !element.isEnabled() ? 0x80FF4444 : isDragging ? 0xFFFFAA00 : hovered ? 0xFFFFFFFF : 0x80FFFFFF;
 
         context.fill(x1, y1, x2, y1 + 1, borderColor);
         context.fill(x1, y2 - 1, x2, y2, borderColor);
@@ -133,21 +148,50 @@ public class HudEditorScreen extends Screen {
         return Math.clamp(y, 3, height - element.getHeight() - 3);
     }
 
+    private void openDropdown(HudElement element, int x, int y) {
+        DropdownMenu dropdown = new DropdownMenu(x, y);
+        dropdown.addOption(element.isEnabled() ? "Disable" : "Enable", () -> {
+            element.setEnabled(!element.isEnabled());
+            activeDropdown = null;
+        });
+        activeDropdown = dropdown;
+    }
+
     @Override
     public boolean mouseClicked(Click click, boolean doubled) {
-        for (HudElement element : HudManager.getAll()) {
-            if (isHovered(element, click.x(), click.y())) {
-                dragging = element.getId();
-                dragOffsetX = (int) click.x() - element.getX();
-                dragOffsetY = (int) click.y() - element.getY();
-
-                snappingHelper = new SnappingHelper(
-                        getSnapRects(element.getId()),
-                        getElementRect(element)
-                );
+        if (activeDropdown != null) {
+            if (activeDropdown.isClickOutside(click)) {
+                activeDropdown = null;
+            } else {
+                activeDropdown.mouseClicked(click);
                 return true;
             }
         }
+
+        if (click.button() == 1) {
+            for (HudElement element : HudManager.getAll()) {
+                if (isHovered(element, click.x(), click.y())) {
+                    openDropdown(element, (int) click.x(), (int) click.y());
+                    return true;
+                }
+            }
+        }
+
+        if (click.button() == 0) {
+            for (HudElement element : HudManager.getAll()) {
+                if (isHovered(element, click.x(), click.y())) {
+                    dragging = element.getId();
+                    dragOffsetX = (int) click.x() - element.getX();
+                    dragOffsetY = (int) click.y() - element.getY();
+                    snappingHelper = new SnappingHelper(
+                            getSnapRects(element.getId()),
+                            getElementRect(element)
+                    );
+                    return true;
+                }
+            }
+        }
+
         return super.mouseClicked(click, doubled);
     }
 
@@ -193,6 +237,7 @@ public class HudEditorScreen extends Screen {
     private void savePositions() {
         for (HudElement element : HudManager.getAll()) {
             modConfig.setHudPosition(element.getId(), element.getX(), element.getY());
+            modConfig.setHudElementEnabled(element.getId(), element.isEnabled());
         }
         modConfig.HANDLER.save();
     }

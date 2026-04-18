@@ -12,7 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.notnightsky.skyutils.SkyutilsClient;
 import net.notnightsky.skyutils.config.keyBindingHelper.toggleHandler;
-import net.notnightsky.skyutils.hud.screen.HudEditorScreen;
+import net.notnightsky.skyutils.gui.screen.HudEditorScreen;
 import net.notnightsky.skyutils.modules.discordRpc.IPCManager;
 import net.notnightsky.skyutils.modules.zoom.InterpolationMode;
 
@@ -30,6 +30,16 @@ public class modConfig {
                     .setJson5(true)
                     .build())
             .build();
+    @SerialEntry
+    public static Map<String, Boolean> hudElementsEnabled = new HashMap<>();
+
+    public static void setHudElementEnabled(String id, boolean enabled) {
+        hudElementsEnabled.put(id, enabled);
+    }
+
+    public static boolean getHudElementEnabled(String id, boolean defaultEnabled) {
+        return hudElementsEnabled.getOrDefault(id, defaultEnabled);
+    }
 
     @SerialEntry
     public static Map<String, int[]> hudPositions = new HashMap<>();

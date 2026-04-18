@@ -1,4 +1,4 @@
-package net.notnightsky.skyutils.hud;
+package net.notnightsky.skyutils.gui.hud;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
