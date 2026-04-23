@@ -29,9 +29,7 @@ public class HudEditorScreen extends Screen {
     private boolean panelOpen = false;
     private final int panelWidth = 150;
     private String draggingFromPanel = null;
-    private final int panelButtonY = 10;
-    private final int panelButtonHeight = 20;
-    private int panelButtonX;
+    private int panelButtonX, panelButtonY, panelButtonWidth = 10, panelButtonHeight;
 
     public HudEditorScreen(Screen parent) {
         super(Text.literal("HUD Editor"));
@@ -42,7 +40,9 @@ public class HudEditorScreen extends Screen {
     protected void init() {
         super.init();
         snappingHelper = new SnappingHelper(getSnapRects(null), new Rectangle(0, 0, 0, 0));
-        panelButtonX = width - panelWidth - 5;
+        panelButtonX = width - panelButtonWidth;
+        panelButtonHeight = 40;
+        panelButtonY = height / 2 - panelButtonHeight / 2;
     }
 
     private List<Rectangle> getSnapRects(String excludeId) {
@@ -125,21 +125,24 @@ public class HudEditorScreen extends Screen {
     }
 
     private void renderPanelButton(DrawContext context, int mouseX, int mouseY) {
-        boolean hovered = math.withinBox(panelButtonX, panelButtonY, width, panelButtonHeight, mouseX, mouseY);
+        boolean hovered = mouseX >= panelButtonX && mouseX <= panelButtonX + panelButtonWidth
+                && mouseY >= panelButtonY && mouseY <= panelButtonY + panelButtonHeight;
         int bgColor = hovered ? 0xFF3A3A3A : 0xFF1A1A1A;
         int outlineColor = 0xFF555555;
 
-        context.fill(panelButtonX, panelButtonY, width, panelButtonY + panelButtonHeight, bgColor);
+        context.fill(panelButtonX, panelButtonY, panelButtonX + panelButtonWidth, panelButtonY + panelButtonHeight, bgColor);
         context.fill(panelButtonX - 1, panelButtonY - 1, panelButtonX, panelButtonY + panelButtonHeight + 1, outlineColor);
+        context.fill(panelButtonX + panelButtonWidth, panelButtonY - 1, panelButtonX + panelButtonWidth + 1, panelButtonY + panelButtonHeight + 1, outlineColor);
 
-        String text = "Panel >";
-        context.drawText(client.textRenderer, text, panelButtonX + 5, panelButtonY + 4, Colors.WHITE, false);
+        String text = ">";
+        int textWidth = client.textRenderer.getWidth(text);
+        context.drawText(client.textRenderer, text, panelButtonX + (panelButtonWidth - textWidth) / 2, panelButtonY + (panelButtonHeight - 8) / 2, Colors.WHITE, false);
     }
 
     private void renderPanel(DrawContext context, int mouseX, int mouseY) {
         int panelX = width - panelWidth;
-        context.fill(panelX, 0, width, height, 0xFF1A1A1A);
-        context.fill(panelX - 1, 0, panelX, height, 0xFF555555);
+        context.fill(panelX, 0, width, height, 0xAA1A1A1A);
+        context.fill(panelX - 1, 0, panelX, height, 0xAA555555);
 
         String title = "Available Elements";
         context.drawText(client.textRenderer, title, panelX + 5, 5, Colors.WHITE, false);
@@ -234,7 +237,8 @@ public class HudEditorScreen extends Screen {
     }
 
     private boolean isPanelButtonHovered(int mouseX, int mouseY) {
-        return mouseX >= panelButtonX && mouseX <= width && mouseY >= panelButtonY && mouseY <= panelButtonY + panelButtonHeight;
+        return mouseX >= panelButtonX && mouseX <= panelButtonX + panelButtonWidth
+                && mouseY >= panelButtonY && mouseY <= panelButtonY + panelButtonHeight;
     }
 
     private boolean isPanelCloseHovered(int mouseX, int mouseY) {
