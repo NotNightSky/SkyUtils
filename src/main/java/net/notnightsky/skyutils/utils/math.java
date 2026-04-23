@@ -57,4 +57,8 @@ public final class math {
     private static double easeOutExpo(double t) {
         return t >= 1.0 ? 1.0 : 1.0 - Math.pow(2.0, -10.0 * t);
     }
+
+    public static boolean withinBox(int x, int y, int w, int h, int mouseX, int mouseY) {
+        return mouseX >= x && mouseX <= w && mouseY >= y && mouseY <= y + h;
+    }
 }
