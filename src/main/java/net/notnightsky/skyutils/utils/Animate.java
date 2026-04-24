@@ -59,6 +59,7 @@ public class Animate {
     }
 
     public float getValue() { return value; }
+    public int getIntOffset() { return (int) value; }
     public float getMin() { return min; }
     public float getMax() { return max; }
     public float getSpeed() { return speed; }

@@ -10,9 +10,10 @@ import net.notnightsky.skyutils.config.modConfig;
 import net.notnightsky.skyutils.gui.hud.HudElement;
 import net.notnightsky.skyutils.gui.hud.HudManager;
 import net.notnightsky.skyutils.gui.screen.menus.DropdownMenu;
+import net.notnightsky.skyutils.utils.Animate;
+import net.notnightsky.skyutils.utils.Easing;
 import net.notnightsky.skyutils.utils.Rectangle;
 import net.notnightsky.skyutils.utils.SnappingHelper;
-import net.notnightsky.skyutils.utils.math;
 
 
 import java.util.ArrayList;
@@ -29,7 +30,11 @@ public class HudEditorScreen extends Screen {
     private boolean panelOpen = false;
     private final int panelWidth = 150;
     private String draggingFromPanel = null;
-    private int panelButtonX, panelButtonY, panelButtonWidth = 10, panelButtonHeight;
+    private int panelButtonX;
+    private int panelButtonY;
+    private final int panelButtonWidth = 10;
+    private int panelButtonHeight;
+    private final Animate panelAnim = new Animate().setMin(0).setMax(1).setSpeed(5).setEase(Easing.QUAD_OUT);
 
     public HudEditorScreen(Screen parent) {
         super(Text.literal("HUD Editor"));
@@ -78,17 +83,21 @@ public class HudEditorScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         context.fill(0, 0, width, height, 0x80000000);
 
-        if (panelOpen) {
-            renderPanel(context, mouseX, mouseY);
-        } else {
-            renderPanelButton(context, mouseX, mouseY);
-        }
-
         for (HudElement element : HudManager.getAll()) {
             if (element.isEnabled() && !element.getId().equals(dragging)) {
                 renderPlaceholder(context, element);
                 drawHighlight(context, element, mouseX, mouseY);
             }
+        }
+
+        panelAnim.setReversed(!panelOpen).update();
+        float panelProgress = panelAnim.getValue();
+        int panelOffset = (int) ((panelWidth + 5) * (1 - panelProgress));
+
+        if (panelProgress > 0) {
+            renderPanel(context, mouseX, mouseY, panelOffset);
+        } else {
+            renderPanelButton(context, mouseX, mouseY);
         }
 
         if (dragging != null) {
@@ -139,8 +148,8 @@ public class HudEditorScreen extends Screen {
         context.drawText(client.textRenderer, text, panelButtonX + (panelButtonWidth - textWidth) / 2, panelButtonY + (panelButtonHeight - 8) / 2, Colors.WHITE, false);
     }
 
-    private void renderPanel(DrawContext context, int mouseX, int mouseY) {
-        int panelX = width - panelWidth;
+    private void renderPanel(DrawContext context, int mouseX, int mouseY, int panelOffset) {
+        int panelX = width - panelWidth + panelOffset;
         context.fill(panelX, 0, width, height, 0xAA1A1A1A);
         context.fill(panelX - 1, 0, panelX, height, 0xAA555555);
 
@@ -150,7 +159,7 @@ public class HudEditorScreen extends Screen {
         int y = 25;
         for (HudElement element : HudManager.getAll()) {
             if (!element.isEnabled()) {
-                boolean hovered = mouseX >= panelX + 2 && mouseX <= width - 2 && mouseY >= y && mouseY <= y + 16;
+                boolean hovered = mouseX >= panelX + 2 && mouseY >= y && mouseY <= y + 16;
                 int bgColor = hovered ? 0xFF3A3A3A : 0xFF2A2A2A;
                 int outlineColor = hovered ? 0xFF888888 : 0xFF444444;
 
@@ -168,10 +177,6 @@ public class HudEditorScreen extends Screen {
         if (y == 25) {
             context.drawText(client.textRenderer, "None", panelX + 5, 25, Colors.GRAY, false);
         }
-
-        String closeText = "< Close";
-        boolean closeHovered = mouseX >= panelX + 5 && mouseX <= panelX + 50 && mouseY >= height - 25 && mouseY <= height - 10;
-        context.drawText(client.textRenderer, closeText, panelX + 5, height - 25, closeHovered ? Colors.WHITE : Colors.GRAY, false);
     }
 
     private void renderPlaceholder(DrawContext context, HudElement element) {
@@ -219,7 +224,7 @@ public class HudEditorScreen extends Screen {
                 client.textRenderer.getWidth(element.getPlaceholderText()),
                 element.getWidth()
         );
-        int maxX = panelOpen ? width - panelWidth - elementWidth - 3 : width - elementWidth - 3;
+        int maxX = width - elementWidth - 3;
         return Math.clamp(x, 3, maxX);
     }
 
@@ -241,24 +246,18 @@ public class HudEditorScreen extends Screen {
                 && mouseY >= panelButtonY && mouseY <= panelButtonY + panelButtonHeight;
     }
 
-    private boolean isPanelCloseHovered(int mouseX, int mouseY) {
-        int panelX = width - panelWidth;
-        return mouseX >= panelX + 5 && mouseX <= panelX + 50 && mouseY >= height - 25 && mouseY <= height - 10;
-    }
-
     private boolean isInPanelArea(int mouseX, int mouseY) {
         return mouseX >= width - panelWidth;
     }
 
     private HudElement getPanelElementAt(int mouseX, int mouseY) {
-        if (!panelOpen) return null;
         int panelX = width - panelWidth;
-        if (mouseX < panelX + 2 || mouseX > width - 2) return null;
+        int panelRight = width - 2;
 
         int y = 25;
         for (HudElement element : HudManager.getAll()) {
             if (!element.isEnabled()) {
-                if (mouseX >= panelX + 2 && mouseX <= width - 2 && mouseY >= y && mouseY <= y + 16) {
+                if (mouseX >= panelX + 2 && mouseX <= panelRight && mouseY >= y && mouseY <= y + 16) {
                     return element;
                 }
                 y += 20;
@@ -278,16 +277,10 @@ public class HudEditorScreen extends Screen {
             }
         }
 
-        int mouseX = (int) click.x();
+int mouseX = (int) click.x();
         int mouseY = (int) click.y();
 
         if (panelOpen) {
-            if (isPanelCloseHovered(mouseX, mouseY)) {
-                panelOpen = false;
-                snappingHelper = new SnappingHelper(getSnapRects(null), new Rectangle(0, 0, 0, 0));
-                return true;
-            }
-
             boolean clickedElement = false;
             for (HudElement element : HudManager.getAll()) {
                 if (element.isEnabled() && isHovered(element, click.x(), click.y())) {
@@ -301,12 +294,10 @@ public class HudEditorScreen extends Screen {
                 snappingHelper = new SnappingHelper(getSnapRects(null), new Rectangle(0, 0, 0, 0));
             }
 
-            if (!clickedElement) {
-                HudElement panelElement = getPanelElementAt(mouseX, mouseY);
-                if (panelElement != null && click.button() == 0) {
-                    draggingFromPanel = panelElement.getId();
-                    return true;
-                }
+            HudElement panelElement = getPanelElementAt(mouseX, mouseY);
+            if (panelElement != null && click.button() == 0) {
+                draggingFromPanel = panelElement.getId();
+                return true;
             }
         } else {
             if (isPanelButtonHovered(mouseX, mouseY) && click.button() == 0) {
@@ -349,21 +340,22 @@ public class HudEditorScreen extends Screen {
         int mouseY = (int) click.y();
 
         if (draggingFromPanel != null) {
-            if (mouseX < width - panelWidth - 10) {
-                HudElement element = HudManager.get(draggingFromPanel);
-                if (element != null) {
-                    element.setX(clampX(element, mouseX - 50));
-                    element.setY(clampY(element, mouseY - 8));
+            HudElement element = HudManager.get(draggingFromPanel);
+            if (element != null) {
+                element.setX(clampX(element, mouseX - 50));
+                element.setY(clampY(element, mouseY - 8));
+
+                if (mouseX > width - panelWidth - 10) {
                     element.setEnabled(true);
+                    dragging = draggingFromPanel;
+                    draggingFromPanel = null;
+                    dragOffsetX = 50;
+                    dragOffsetY = 8;
                     snappingHelper = new SnappingHelper(
                             getSnapRects(element.getId()),
                             getElementRect(element)
                     );
                 }
-                dragging = draggingFromPanel;
-                draggingFromPanel = null;
-                dragOffsetX = 50;
-                dragOffsetY = 8;
             }
             return true;
         }
@@ -373,10 +365,6 @@ public class HudEditorScreen extends Screen {
             if (element != null) {
                 int newX = (int) click.x() - dragOffsetX;
                 int newY = clampY(element, (int) click.y() - dragOffsetY);
-
-                if (panelOpen && mouseX >= width - panelWidth - 30) {
-                    newX = width - panelWidth - 10;
-                }
 
                 newX = clampX(element, newX);
 
@@ -399,15 +387,6 @@ public class HudEditorScreen extends Screen {
     @Override
     public boolean mouseReleased(Click click) {
         if (click.button() == 0) {
-            if (dragging != null && panelOpen) {
-                int mouseX = (int) click.x();
-                HudElement element = HudManager.get(dragging);
-                if (element != null && mouseX >= width - panelWidth - 30) {
-                    element.setEnabled(false);
-                    panelOpen = false;
-                    snappingHelper = new SnappingHelper(getSnapRects(null), new Rectangle(0, 0, 0, 0));
-                }
-            }
             dragging = null;
             draggingFromPanel = null;
             return true;
