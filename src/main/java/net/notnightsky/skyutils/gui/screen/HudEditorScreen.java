@@ -84,8 +84,11 @@ public class HudEditorScreen extends Screen {
         context.fill(0, 0, width, height, 0x80000000);
 
         for (HudElement element : HudManager.getAll()) {
-            if (element.isEnabled() && !element.getId().equals(dragging)) {
+            if (element.isEnabled() && !element.getId().equals(dragging) && client.player == null) {
                 renderPlaceholder(context, element);
+                drawHighlight(context, element, mouseX, mouseY);
+            } else {
+                element.render(context, delta);
                 drawHighlight(context, element, mouseX, mouseY);
             }
         }
@@ -103,18 +106,26 @@ public class HudEditorScreen extends Screen {
         if (dragging != null) {
             snappingHelper.renderSnaps(context);
             HudElement draggingElement = HudManager.get(dragging);
-            if (draggingElement != null) {
+            if (draggingElement != null && client.player == null) {
                 renderPlaceholder(context, draggingElement);
+                drawHighlight(context, draggingElement, mouseX, mouseY);
+            } else if (draggingElement != null && client.player != null){
+                draggingElement.render(context, delta);
                 drawHighlight(context, draggingElement, mouseX, mouseY);
             }
         }
 
         if (draggingFromPanel != null) {
             HudElement draggingElement = HudManager.get(draggingFromPanel);
-            if (draggingElement != null) {
+            if (draggingElement != null && client.player == null) {
                 draggingElement.setX(clampX(draggingElement, mouseX - 50));
                 draggingElement.setY(clampY(draggingElement, mouseY - 8));
                 renderPlaceholder(context, draggingElement);
+                drawHighlight(context, draggingElement, mouseX, mouseY);
+            } else if (draggingElement != null & client.player != null){
+                draggingElement.setX(clampX(draggingElement, mouseX - 50));
+                draggingElement.setY(clampY(draggingElement, mouseY - 8));
+                draggingElement.render(context, delta);
                 drawHighlight(context, draggingElement, mouseX, mouseY);
             }
         }
@@ -197,7 +208,12 @@ public class HudEditorScreen extends Screen {
     private void drawHighlight(DrawContext context, HudElement element, int mouseX, int mouseY) {
         int x1 = element.getX() - 2;
         int y1 = element.getY() - 2;
-        int x2 = element.getX() + client.textRenderer.getWidth(element.getPlaceholderText()) + 2;
+        int x2 = 0;
+        if (client.player == null) {
+            x2 = element.getX() + client.textRenderer.getWidth(element.getPlaceholderText()) + 2;
+        } else {
+            x2 = element.getX() + element.getWidth();
+        }
         int y2 = element.getY() + element.getHeight() + 2;
 
         boolean hovered = isHovered(element, mouseX, mouseY);
