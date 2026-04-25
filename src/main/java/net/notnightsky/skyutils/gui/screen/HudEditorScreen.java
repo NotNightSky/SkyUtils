@@ -84,13 +84,13 @@ public class HudEditorScreen extends Screen {
         context.fill(0, 0, width, height, 0x80000000);
 
         for (HudElement element : HudManager.getAll()) {
-            if (element.isEnabled() && !element.getId().equals(dragging) && client.player == null) {
-                renderPlaceholder(context, element);
-                drawHighlight(context, element, mouseX, mouseY);
-            } else {
+            if (!element.isEnabled() || element.getId().equals(dragging)) continue;
+            if (client.player != null) {
                 element.render(context, delta);
-                drawHighlight(context, element, mouseX, mouseY);
+            } else {
+                renderPlaceholder(context, element);
             }
+            drawHighlight(context, element, mouseX, mouseY);
         }
 
         panelAnim.setReversed(!panelOpen).update();
@@ -117,12 +117,12 @@ public class HudEditorScreen extends Screen {
 
         if (draggingFromPanel != null) {
             HudElement draggingElement = HudManager.get(draggingFromPanel);
-            if (draggingElement != null && client.player == null) {
+            if (draggingElement != null && client.player != null) {
                 draggingElement.setX(clampX(draggingElement, mouseX - 50));
                 draggingElement.setY(clampY(draggingElement, mouseY - 8));
                 renderPlaceholder(context, draggingElement);
                 drawHighlight(context, draggingElement, mouseX, mouseY);
-            } else if (draggingElement != null & client.player != null){
+            } else if (draggingElement != null && client.player == null){
                 draggingElement.setX(clampX(draggingElement, mouseX - 50));
                 draggingElement.setY(clampY(draggingElement, mouseY - 8));
                 draggingElement.render(context, delta);
@@ -293,7 +293,7 @@ public class HudEditorScreen extends Screen {
             }
         }
 
-int mouseX = (int) click.x();
+        int mouseX = (int) click.x();
         int mouseY = (int) click.y();
 
         if (panelOpen) {
