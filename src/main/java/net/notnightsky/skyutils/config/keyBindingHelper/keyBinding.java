@@ -1,63 +1,62 @@
 package net.notnightsky.skyutils.config.keyBindingHelper;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.Identifier;
 import net.notnightsky.skyutils.SkyutilsClient;
 import org.lwjgl.glfw.GLFW;
 
 public class keyBinding {
-    public static KeyBinding openMenu;
-    public static KeyBinding toggleFullBright;
-    public static KeyBinding incrementFullBright;
-    public static KeyBinding decrementFullBright;
-    public static KeyBinding zoomKey;
-    public static KeyBinding hudEditorKey;
+    public static KeyMapping openMenu;
+    public static KeyMapping toggleFullBright;
+    public static KeyMapping incrementFullBright;
+    public static KeyMapping decrementFullBright;
+    public static KeyMapping zoomKey;
+    public static KeyMapping hudEditorKey;
     public static boolean loaded = false;
 
     public static void registerKeybinds(){
-        KeyBinding.Category skyutilsCategory = KeyBinding.Category.create(Identifier.of("skyutils"));
-        openMenu = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        KeyMapping.Category skyutilsCategory = KeyMapping.Category.register(Identifier.parse("skyutils"));
+        openMenu = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.skyutils.openMenu",
-                InputUtil.Type.KEYSYM,
+                InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_RIGHT_SHIFT,
                 skyutilsCategory
         ));
 
-        zoomKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        zoomKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.skyutils.zoom",
-                InputUtil.Type.KEYSYM,
+                InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_C,
                 skyutilsCategory
         ));
 
-        toggleFullBright = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        toggleFullBright = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.skyutils.toggleFullBright",
-                InputUtil.Type.KEYSYM,
+                InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_LEFT_ALT,
                 skyutilsCategory
         ));
 
-        incrementFullBright = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        incrementFullBright = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.skyutils.incrementFullBright",
-                InputUtil.Type.KEYSYM,
+                InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_KP_ADD,
                 skyutilsCategory
         ));
 
-        decrementFullBright = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        decrementFullBright = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.skyutils.decrementFullBright",
-                InputUtil.Type.KEYSYM,
+                InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_KP_SUBTRACT,
                 skyutilsCategory
         ));
 
         if (SkyutilsClient.isDevEnv){
-            hudEditorKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            hudEditorKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                     "key.skyutils.hudEditorKey",
-                    InputUtil.Type.KEYSYM,
+                    InputConstants.Type.KEYSYM,
                     GLFW.GLFW_KEY_H,
                     skyutilsCategory
             ));

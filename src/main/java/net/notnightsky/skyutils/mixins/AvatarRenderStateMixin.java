@@ -1,13 +1,13 @@
 package net.notnightsky.skyutils.mixins;
 
-import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.notnightsky.skyutils.modules.playerhealthindicator.PlayerHealthInterface;
 import net.notnightsky.skyutils.modules.playerlatency.PlayerLatencyInterface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(PlayerEntityRenderState.class)
-public class PlayerEntityRenderStateMixin implements PlayerHealthInterface, PlayerLatencyInterface {
+@Mixin(AvatarRenderState.class)
+public class AvatarRenderStateMixin implements PlayerHealthInterface, PlayerLatencyInterface {
     @Unique
     private int skyutils$latency;
 

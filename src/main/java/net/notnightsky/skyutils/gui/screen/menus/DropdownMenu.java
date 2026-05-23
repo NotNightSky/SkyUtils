@@ -1,12 +1,11 @@
 package net.notnightsky.skyutils.gui.screen.menus;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.util.Colors;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.util.CommonColors;
 
 public class DropdownMenu {
 
@@ -18,7 +17,7 @@ public class DropdownMenu {
     private static final int OPTION_HEIGHT = 12;
     private static final int PADDING = 4;
     private static final int WIDTH = 80;
-    private final MinecraftClient client = MinecraftClient.getInstance();
+    private final Minecraft client = Minecraft.getInstance();
 
     public DropdownMenu(int x, int y) {
         this.x = x;
@@ -34,7 +33,7 @@ public class DropdownMenu {
     public int getX() { return x; }
     public int getY() { return y; }
 
-    public void render(DrawContext context, int mouseX, int mouseY) {
+    public void render(GuiGraphics context, int mouseX, int mouseY) {
         context.fill(x, y, x + WIDTH, y + getHeight(), 0xFF1A1A1A);
         context.fill(x, y, x + WIDTH, y + 1, 0xFF555555);
         context.fill(x, y + getHeight() - 1, x + WIDTH, y + getHeight(), 0xFF555555);
@@ -50,12 +49,12 @@ public class DropdownMenu {
                 context.fill(x + 1, optionY, x + WIDTH - 1, optionY + OPTION_HEIGHT, 0xFF2A2A2A);
             }
 
-            context.drawText(client.textRenderer, options.get(i).label(),
-                    x + PADDING, optionY + 2, hovered ? Colors.WHITE : Colors.LIGHTER_GRAY, false);
+            context.drawString(client.font, options.get(i).label(),
+                    x + PADDING, optionY + 2, hovered ? CommonColors.WHITE : CommonColors.TEXT_GRAY, false);
         }
     }
 
-    public boolean mouseClicked(Click click) {
+    public boolean mouseClicked(MouseButtonEvent click) {
         if (click.button() != 0) return false;
         for (int i = 0; i < options.size(); i++) {
             int optionY = y + PADDING + i * OPTION_HEIGHT;
@@ -68,7 +67,7 @@ public class DropdownMenu {
         return false;
     }
 
-    public boolean isClickOutside(Click click) {
+    public boolean isClickOutside(MouseButtonEvent click) {
         return click.x() < x || click.x() > x + WIDTH
                 || click.y() < y || click.y() > y + getHeight();
     }

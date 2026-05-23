@@ -1,9 +1,9 @@
 package net.notnightsky.skyutils.mixins;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
-import net.minecraft.screen.AbstractFurnaceScreenHandler;
-import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
+import net.minecraft.world.inventory.AbstractFurnaceMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.notnightsky.skyutils.config.modConfig;
 import net.notnightsky.skyutils.modules.furnace.furnaceCalculations;
 import net.notnightsky.skyutils.modules.furnace.furnaceGui;
@@ -15,13 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AbstractFurnaceScreen.class)
 public abstract class furnaceScreenMixin {
 
-    @Inject(method = "drawBackground", at = @At("TAIL"))
-    private void skyutils$furnaceUtil(DrawContext context, float deltaTicks, int mouseX, int mouseY, CallbackInfo ci) {
+    @Inject(method = "renderBg", at = @At("TAIL"))
+    private void skyutils$furnaceUtil(GuiGraphics context, float deltaTicks, int mouseX, int mouseY, CallbackInfo ci) {
         if (modConfig.furnaceToolTip){
             AbstractFurnaceScreen<?> screen = (AbstractFurnaceScreen<?>) (Object) this;
-            AbstractFurnaceScreenHandler handler = screen.getScreenHandler();
+            AbstractFurnaceMenu handler = screen.getMenu();
 
-            PropertyDelegate props = handler.propertyDelegate;
+            ContainerData props = handler.data;
 
             int fuelRemaining = props.get(0);
             int fuelTime = props.get(1);
@@ -30,8 +30,8 @@ public abstract class furnaceScreenMixin {
 
             int totalItemsToSmelt = 0;
 
-            if (handler.getSlot(0) != null && !handler.getSlot(0).getStack().isEmpty()) {
-                totalItemsToSmelt = handler.getSlot(0).getStack().getCount();
+            if (handler.getSlot(0) != null && !handler.getSlot(0).getItem().isEmpty()) {
+                totalItemsToSmelt = handler.getSlot(0).getItem().getCount();
             }
 
             furnaceCalculations.FurnaceInfo info = furnaceCalculations.fromProperties(fuelRemaining, fuelTime, cookElapsed, cookTime, totalItemsToSmelt, 0);

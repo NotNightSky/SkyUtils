@@ -1,24 +1,24 @@
 package net.notnightsky.skyutils.modules.fullbright;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.notnightsky.skyutils.config.modConfig;
 
 public class fullBright {
     public static void enableFullbright(){
-        MinecraftClient.getInstance().options.getGamma().setValue(modConfig.gamma / 100.0);
-        if (MinecraftClient.getInstance().player != null){
-            MinecraftClient.getInstance().player.sendMessage(Text.of("Gamma Value is Set to " + (int)modConfig.gamma + "%"), true);
+        Minecraft.getInstance().options.gamma().set(modConfig.gamma / 100.0);
+        if (Minecraft.getInstance().player != null){
+            Minecraft.getInstance().player.displayClientMessage(Component.nullToEmpty("Gamma Value is Set to " + (int)modConfig.gamma + "%"), true);
         }
         modConfig.fullBright = true;
     }
 
     public static void disableFullbright(){
-        MinecraftClient.getInstance().options.getGamma().setValue(modConfig.defaultGamma / 100.0);
-        if (MinecraftClient.getInstance().player != null){
-            MinecraftClient.getInstance().player.sendMessage(Text.of("Gamma Value is Set to " + (int)modConfig.defaultGamma + "%"), true);
+        Minecraft.getInstance().options.gamma().set(modConfig.defaultGamma / 100.0);
+        if (Minecraft.getInstance().player != null){
+            Minecraft.getInstance().player.displayClientMessage(Component.nullToEmpty("Gamma Value is Set to " + (int)modConfig.defaultGamma + "%"), true);
         }
         modConfig.fullBright = false;
     }
@@ -30,8 +30,8 @@ public class fullBright {
                 enableFullbright();
             } else if (modConfig.gamma <= 1000.0){
                 modConfig.gamma = 1000.0;
-                if (MinecraftClient.getInstance().player != null){
-                    MinecraftClient.getInstance().player.sendMessage(Text.of("Gamma Value Reached 1000%"), true);
+                if (Minecraft.getInstance().player != null){
+                    Minecraft.getInstance().player.displayClientMessage(Component.nullToEmpty("Gamma Value Reached 1000%"), true);
                 }
             }
             modConfig.HANDLER.save();
@@ -45,8 +45,8 @@ public class fullBright {
                 enableFullbright();
             } else if (modConfig.gamma < 0.0){
                 modConfig.gamma = 0.0;
-                if (MinecraftClient.getInstance().player != null){
-                    MinecraftClient.getInstance().player.sendMessage(Text.of("Gamma Value Reached 1%"), true);
+                if (Minecraft.getInstance().player != null){
+                    Minecraft.getInstance().player.displayClientMessage(Component.nullToEmpty("Gamma Value Reached 1%"), true);
                 }
             }
             modConfig.HANDLER.save();
@@ -55,10 +55,10 @@ public class fullBright {
 
     public void noDarknessEffect(){
         if (modConfig.nodarkness){
-            if (MinecraftClient.getInstance().player != null) {
-                StatusEffectInstance darknessEffect = MinecraftClient.getInstance().player.getStatusEffect(StatusEffects.DARKNESS);
+            if (Minecraft.getInstance().player != null) {
+                MobEffectInstance darknessEffect = Minecraft.getInstance().player.getEffect(MobEffects.DARKNESS);
                 if (darknessEffect != null) {
-                    MinecraftClient.getInstance().player.removeStatusEffect(StatusEffects.DARKNESS);
+                    Minecraft.getInstance().player.removeEffect(MobEffects.DARKNESS);
                 }
             }
         }

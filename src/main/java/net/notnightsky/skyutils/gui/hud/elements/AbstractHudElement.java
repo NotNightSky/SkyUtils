@@ -1,11 +1,11 @@
 package net.notnightsky.skyutils.gui.hud.elements;
 
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.notnightsky.skyutils.gui.hud.HudElement;
 
 public abstract class AbstractHudElement implements HudElement {
 
-    protected final MinecraftClient client = MinecraftClient.getInstance();
+    protected final Minecraft client = Minecraft.getInstance();
 
     private int x = 0;
     private int y = 0;

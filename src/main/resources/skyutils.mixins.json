@@ -8,13 +8,13 @@
     "deathScreenMixin",
     "doubleSliderCallBackMixin",
     "furnaceScreenMixin",
-    "InGameHudMixin",
-    "InGameOverlayRendererMixin",
-    "MouseMixin",
-    "PlayerEntityRendererMixin",
-    "PlayerEntityRenderStateMixin",
-    "ShieldModelRendererMixin",
-    "WorldRendererMixin"
+    "GuiMixin",
+    "ScreenEffectRendererMixin",
+    "MouseHandlerMixin",
+    "AvatarRendererMixin",
+    "AvatarRenderStateMixin",
+    "ShieldSpecialRenderer",
+    "LevelRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

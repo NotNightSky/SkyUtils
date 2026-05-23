@@ -1,12 +1,11 @@
 package net.notnightsky.skyutils.modules.furnace;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
-import net.minecraft.text.Text;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
+import net.minecraft.network.chat.Component;
 
 public class furnaceGui {
     private static final int PROGRESS_ARROW_X = 79;
@@ -14,13 +13,13 @@ public class furnaceGui {
     private static final int PROGRESS_ARROW_WIDTH = 24;
     private static final int PROGRESS_ARROW_HEIGHT = 17;
 
-    public static void renderTooltipIfHovered(DrawContext ctx, AbstractFurnaceScreen<?> screen, furnaceCalculations.FurnaceInfo info, int mouseX, int mouseY) {
-        int screenX = screen.x;
-        int screenY = screen.y;
+    public static void renderTooltipIfHovered(GuiGraphics ctx, AbstractFurnaceScreen<?> screen, furnaceCalculations.FurnaceInfo info, int mouseX, int mouseY) {
+        int screenX = screen.leftPos;
+        int screenY = screen.topPos;
 
         if (isMouseOverArea(mouseX, mouseY, screenX, screenY)) {
-            List<Text> tooltip = createTooltip(info);
-            ctx.drawTooltip(MinecraftClient.getInstance().textRenderer, tooltip, mouseX, mouseY);
+            List<Component> tooltip = createTooltip(info);
+            ctx.setComponentTooltipForNextFrame(Minecraft.getInstance().font, tooltip, mouseX, mouseY);
         }
     }
 
@@ -31,14 +30,14 @@ public class furnaceGui {
                mouseY <= screenY + PROGRESS_ARROW_Y + PROGRESS_ARROW_HEIGHT;
     }
 
-    private static List<Text> createTooltip(furnaceCalculations.FurnaceInfo info) {
-        List<Text> tooltip = new ArrayList<>();
+    private static List<Component> createTooltip(furnaceCalculations.FurnaceInfo info) {
+        List<Component> tooltip = new ArrayList<>();
 
-        tooltip.add(Text.literal("Remaining: " + info.remainingTimeString()));
-        tooltip.add(Text.literal("Total: " + info.totalTimeString()));
-        tooltip.add(Text.literal("Fuel Left: " + info.fuelLeftString()));
-        tooltip.add(Text.literal("Cook %: " + info.cookPercentString()));
-        tooltip.add(Text.literal("Fuel %: " + info.fuelPercentString()));
+        tooltip.add(Component.literal("Remaining: " + info.remainingTimeString()));
+        tooltip.add(Component.literal("Total: " + info.totalTimeString()));
+        tooltip.add(Component.literal("Fuel Left: " + info.fuelLeftString()));
+        tooltip.add(Component.literal("Cook %: " + info.cookPercentString()));
+        tooltip.add(Component.literal("Fuel %: " + info.fuelPercentString()));
 
         return tooltip;
     }

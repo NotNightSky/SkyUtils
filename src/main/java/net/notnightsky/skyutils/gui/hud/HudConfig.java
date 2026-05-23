@@ -6,7 +6,7 @@ public class HudConfig {
     * Any further changes will be announced in the github page*/
 
     private static int backgroundColor = -1873784752;
-    private static int textColor = net.minecraft.util.Colors.LIGHTER_GRAY;
+    private static int textColor = net.minecraft.util.CommonColors.TEXT_GRAY;
     private static boolean textShadow = false;
 
     public static int getBackgroundColor() { return backgroundColor; }

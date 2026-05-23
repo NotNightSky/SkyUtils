@@ -1,20 +1,19 @@
 package net.notnightsky.skyutils.gui.hud.elements;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 import net.notnightsky.skyutils.gui.hud.HudElement;
 
 public class FpsElement extends AbstractHudElement{
 
     @Override
-    public void render(DrawContext context, float deltaTicks) {
-        String text = "FPS: " + client.getCurrentFps();
-        int textWidth = client.textRenderer.getWidth(text);
+    public void render(GuiGraphics context, float deltaTicks) {
+        String text = "FPS: " + client.getFps();
+        int textWidth = client.font.width(text);
         drawBackground(context, textWidth);
-        drawText(context, client.textRenderer, text);
+        drawText(context, client.font, text);
     }
 
-    @Override public int getWidth() { return client.textRenderer.getWidth(getPlaceholderText()); }
+    @Override public int getWidth() { return client.font.width(getPlaceholderText()); }
     @Override public String getId() { return "skyutils:fps"; }
     @Override public String getPlaceholderText() { return "FPS: 60"; }
 

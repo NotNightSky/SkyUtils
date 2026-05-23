@@ -1,8 +1,8 @@
 package net.notnightsky.skyutils.config.keyBindingHelper;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.notnightsky.skyutils.config.modConfig;
 import net.notnightsky.skyutils.gui.screen.HudEditorScreen;
 
@@ -13,31 +13,31 @@ public class toggleHandler {
 
     public static void registerToggle(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if(!loaded && MinecraftClient.getInstance().options != null) {
+            if(!loaded && Minecraft.getInstance().options != null) {
                 loaded = true;
                 if(modConfig.fullBright) {
                     enableFullbright();
                 }
             }
 
-            if (hudEditorKey.wasPressed()){
-                MinecraftClient.getInstance().setScreen(new HudEditorScreen(MinecraftClient.getInstance().currentScreen));
+            if (hudEditorKey.consumeClick()){
+                Minecraft.getInstance().setScreen(new HudEditorScreen(Minecraft.getInstance().screen));
             }
 
-            if (openMenu.wasPressed()) {
-                Screen configScreen = modConfig.openConfigScreen(MinecraftClient.getInstance().currentScreen);
-                MinecraftClient.getInstance().setScreen(configScreen);
+            if (openMenu.consumeClick()) {
+                Screen configScreen = modConfig.openConfigScreen(Minecraft.getInstance().screen);
+                Minecraft.getInstance().setScreen(configScreen);
             }
 
-            if (incrementFullBright.wasPressed()){
+            if (incrementFullBright.consumeClick()){
                 incrementFullBright();
             }
 
-            if (decrementFullBright.wasPressed()){
+            if (decrementFullBright.consumeClick()){
                 decrementFullBright();
             }
 
-            if (toggleFullBright.wasPressed()) {
+            if (toggleFullBright.consumeClick()) {
                 toggleFullbright();
             }
         });

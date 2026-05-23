@@ -1,11 +1,10 @@
 package net.notnightsky.skyutils.utils;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class SnappingHelper {
 
@@ -15,7 +14,7 @@ public class SnappingHelper {
     private final HashSet<Integer> x = new HashSet<>();
     private final HashSet<Integer> y = new HashSet<>();
     private Rectangle current;
-    private final MinecraftClient client = MinecraftClient.getInstance();
+    private final Minecraft client = Minecraft.getInstance();
 
     public SnappingHelper(List<Rectangle> rects, Rectangle current) {
         this.current = current;
@@ -50,13 +49,13 @@ public class SnappingHelper {
     }
 
     private Integer getHalfXSnap() {
-        int center = client.getWindow().getScaledWidth() / 2;
+        int center = client.getWindow().getGuiScaledWidth() / 2;
         int pos = current.x() + Math.round((float) current.width() / 2);
         return Math.abs(center - pos) <= SNAP_DISTANCE ? center : null;
     }
 
     private Integer getHalfYSnap() {
-        int center = client.getWindow().getScaledHeight() / 2;
+        int center = client.getWindow().getGuiScaledHeight() / 2;
         int pos = current.y() + Math.round((float) current.height() / 2);
         return Math.abs(center - pos) <= SNAP_DISTANCE ? center : null;
     }
@@ -113,15 +112,15 @@ public class SnappingHelper {
         return null;
     }
 
-    public void renderSnaps(DrawContext context) {
+    public void renderSnaps(GuiGraphics context) {
         Integer snapX = getRawXSnap();
         Integer snapY = getRawYSnap();
 
         if (snapX != null) {
-            context.fill(snapX, 0, snapX + 1, client.getWindow().getScaledHeight(), LINE_COLOR);
+            context.fill(snapX, 0, snapX + 1, client.getWindow().getGuiScaledHeight(), LINE_COLOR);
         }
         if (snapY != null) {
-            context.fill(0, snapY, client.getWindow().getScaledWidth(), snapY + 1, LINE_COLOR);
+            context.fill(0, snapY, client.getWindow().getGuiScaledWidth(), snapY + 1, LINE_COLOR);
         }
     }
 }

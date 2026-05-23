@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 import net.notnightsky.skyutils.config.keyBindingHelper.keyBinding;
 import net.notnightsky.skyutils.config.keyBindingHelper.toggleHandler;
 import net.notnightsky.skyutils.config.modConfig;
@@ -51,8 +51,8 @@ public class SkyutilsClient implements ClientModInitializer {
 
         HudElementRegistry.attachElementBefore(
                 VanillaHudElements.CHAT,
-                Identifier.of("skyutils", "hud"),
-                (context, tickCounter) -> HudManager.renderAll(context, tickCounter.getFixedDeltaTicks())
+                Identifier.fromNamespaceAndPath("skyutils", "hud"),
+                (context, tickCounter) -> HudManager.renderAll(context, tickCounter.getRealtimeDeltaTicks())
         );
     }
 }

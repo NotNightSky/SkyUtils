@@ -1,7 +1,7 @@
 package net.notnightsky.skyutils.modules.zoom;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.SimpleOption;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.OptionInstance;
 import net.notnightsky.skyutils.config.keyBindingHelper.keyBinding;
 import net.notnightsky.skyutils.config.modConfig;
 import net.notnightsky.skyutils.utils.DeltaTime;
@@ -22,30 +22,30 @@ public class zoomHelper {
     private static Double defaultMouseSensitivity;
 
     public static float changeFovOnZoom(float fov) {
-        SimpleOption<Double> mouseSensitivitySetting = MinecraftClient.getInstance().options.getMouseSensitivity();
-        baseZoom = keyBinding.zoomKey.isPressed() ? defaultZoom : 1.0;
-        if(keyBinding.zoomKey.isPressed()){
+        OptionInstance<Double> mouseSensitivitySetting = Minecraft.getInstance().options.sensitivity();
+        baseZoom = keyBinding.zoomKey.isDown() ? defaultZoom : 1.0;
+        if(keyBinding.zoomKey.isDown()){
 
             baseZoom = defaultZoom;
         } else {
             baseZoom = 1.0;
             if(defaultMouseSensitivity != null)
             {
-                mouseSensitivitySetting.setValue(defaultMouseSensitivity);
+                mouseSensitivitySetting.set(defaultMouseSensitivity);
                 defaultMouseSensitivity = null;
             }
         }
 
         if(defaultMouseSensitivity == null)
-            defaultMouseSensitivity = mouseSensitivitySetting.getValue();
+            defaultMouseSensitivity = mouseSensitivitySetting.get();
 
-        mouseSensitivitySetting.setValue(defaultMouseSensitivity * (1.0 / currentLevel));
+        mouseSensitivitySetting.set(defaultMouseSensitivity * (1.0 / currentLevel));
 
         return (float) (fov / currentLevel);
     }
 
     public static void onMouseScroll(double vert) {
-        if (!keyBinding.zoomKey.isPressed()) return;
+        if (!keyBinding.zoomKey.isDown()) return;
         scrollVelocity += vert * 2.5;
     }
 
@@ -59,7 +59,7 @@ public class zoomHelper {
 
         scrollVelocity *= Math.exp(-12.0 * dt);
 
-        if (!keyBinding.zoomKey.isPressed()) {
+        if (!keyBinding.zoomKey.isDown()) {
             scrollZoom = 1.0;
         }
 

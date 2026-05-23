@@ -1,10 +1,9 @@
 package net.notnightsky.skyutils.gui.hud.elements;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import net.notnightsky.skyutils.gui.hud.HudElement;
 
 public class SpeedElement extends AbstractHudElement {
@@ -16,21 +15,21 @@ public class SpeedElement extends AbstractHudElement {
     }
 
     @Override
-    public void render(DrawContext context, float deltaTicks) {
-        ClientPlayerEntity player = client.player;
+    public void render(GuiGraphics context, float deltaTicks) {
+        LocalPlayer player = client.player;
         if (player == null) return;
 
         Entity entity = player.getVehicle() != null ? player.getVehicle() : player;
-        Vec3d velocity = entity.getVelocity();
+        Vec3 velocity = entity.getDeltaMovement();
         speed = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z) * 20;
 
         String text = getText();
-        int textWidth = client.textRenderer.getWidth(text);
+        int textWidth = client.font.width(text);
         drawBackground(context, textWidth);
-        drawText(context, client.textRenderer, text);
+        drawText(context, client.font, text);
     }
 
-    @Override public int getWidth() { return client.textRenderer.getWidth(speed == 0 ? getPlaceholderText() : getText()); }
+    @Override public int getWidth() { return client.font.width(speed == 0 ? getPlaceholderText() : getText()); }
     @Override public String getId() { return "skyutils:speed"; }
     @Override public String getPlaceholderText() { return "Speed: 4.35 b/s"; }
 
