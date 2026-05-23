@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
-    @ModifyReturnValue(at = @At("RETURN"), method = "getFov")
-    private float onGetFov(float original) {
+    @ModifyReturnValue(at = @At("RETURN"), method = "projectHorizonToScreen()D")
+    private double onGetFov(double original) {
         return zoomHelper.changeFovOnZoom(original);
     }
 

@@ -1,11 +1,11 @@
 package net.notnightsky.skyutils.gui.hud;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.CommonColors;
 
 public interface HudElement {
-    void render(GuiGraphics context, float deltaTicks);
+    void render(GuiGraphicsExtractor context, float deltaTicks);
     int getX();
     int getY();
     void setX(int x);
@@ -18,7 +18,7 @@ public interface HudElement {
 
     default int getHeight() { return 9; }
 
-    default void drawBackground(GuiGraphics context, int textWidth) {
+    default void drawBackground(GuiGraphicsExtractor context, int textWidth) {
         context.fill(
                 getX() - 1, getY() - 1,
                 getX() + textWidth + 1, getY() + getHeight(),
@@ -26,7 +26,7 @@ public interface HudElement {
         );
     }
 
-    default void drawText(GuiGraphics context, Font textRenderer, String text) {
-        context.drawString(textRenderer, text, getX(), getY(), CommonColors.TEXT_GRAY, false);
+    default void drawText(GuiGraphicsExtractor context, Font textRenderer, String text) {
+        context.text(textRenderer, text, getX(), getY(), CommonColors.TEXT_GRAY, false);
     }
 }

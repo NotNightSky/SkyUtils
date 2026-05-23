@@ -8,13 +8,12 @@
     "deathScreenMixin",
     "doubleSliderCallBackMixin",
     "furnaceScreenMixin",
+    "GameRendererMixin",
     "GuiMixin",
-    "ScreenEffectRendererMixin",
+    "LevelRendererMixin",
     "MouseHandlerMixin",
-    "AvatarRendererMixin",
-    "AvatarRenderStateMixin",
-    "ShieldSpecialRenderer",
-    "LevelRendererMixin"
+    "ScreenEffectRendererMixin",
+    "ShieldSpecialRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -23,6 +22,5 @@
     "requireAnnotations": true
   },
   "mixins": [
-    "GameRendererMixin"
   ]
 }

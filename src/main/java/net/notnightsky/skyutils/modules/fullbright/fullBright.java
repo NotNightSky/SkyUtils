@@ -10,7 +10,7 @@ public class fullBright {
     public static void enableFullbright(){
         Minecraft.getInstance().options.gamma().set(modConfig.gamma / 100.0);
         if (Minecraft.getInstance().player != null){
-            Minecraft.getInstance().player.displayClientMessage(Component.nullToEmpty("Gamma Value is Set to " + (int)modConfig.gamma + "%"), true);
+            Minecraft.getInstance().player.sendOverlayMessage(Component.nullToEmpty("Gamma Value is Set to " + (int)modConfig.gamma + "%"));
         }
         modConfig.fullBright = true;
     }
@@ -18,7 +18,7 @@ public class fullBright {
     public static void disableFullbright(){
         Minecraft.getInstance().options.gamma().set(modConfig.defaultGamma / 100.0);
         if (Minecraft.getInstance().player != null){
-            Minecraft.getInstance().player.displayClientMessage(Component.nullToEmpty("Gamma Value is Set to " + (int)modConfig.defaultGamma + "%"), true);
+            Minecraft.getInstance().player.sendOverlayMessage(Component.nullToEmpty("Gamma Value is Set to " + (int)modConfig.defaultGamma + "%"));
         }
         modConfig.fullBright = false;
     }
@@ -31,7 +31,7 @@ public class fullBright {
             } else if (modConfig.gamma <= 1000.0){
                 modConfig.gamma = 1000.0;
                 if (Minecraft.getInstance().player != null){
-                    Minecraft.getInstance().player.displayClientMessage(Component.nullToEmpty("Gamma Value Reached 1000%"), true);
+                    Minecraft.getInstance().player.sendOverlayMessage(Component.nullToEmpty("Gamma Value Reached 1000%"));
                 }
             }
             modConfig.HANDLER.save();
@@ -46,7 +46,7 @@ public class fullBright {
             } else if (modConfig.gamma < 0.0){
                 modConfig.gamma = 0.0;
                 if (Minecraft.getInstance().player != null){
-                    Minecraft.getInstance().player.displayClientMessage(Component.nullToEmpty("Gamma Value Reached 1%"), true);
+                    Minecraft.getInstance().player.sendOverlayMessage(Component.nullToEmpty("Gamma Value Reached 1%"));
                 }
             }
             modConfig.HANDLER.save();

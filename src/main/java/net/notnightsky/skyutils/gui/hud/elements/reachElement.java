@@ -2,7 +2,7 @@
 package net.notnightsky.skyutils.gui.hud.elements;
 
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
@@ -14,7 +14,7 @@ public class reachElement extends AbstractHudElement {
 
     private static final long DISPLAY_DURATION_MS = 2000;
 
-    private int decimalPlaces = 2;
+    private final int decimalPlaces = 2;
     private String currentDist = null;
     private long lastTime = 0;
 
@@ -23,12 +23,9 @@ public class reachElement extends AbstractHudElement {
             if (!world.isClientSide()) return InteractionResult.PASS;
 
             double distance = getAttackDistance(player, entity);
-            StringBuilder format = new StringBuilder("0");
-            if (decimalPlaces > 0) {
-                format.append(".");
-                format.append("0".repeat(decimalPlaces));
-            }
-            DecimalFormat formatter = new DecimalFormat(format.toString());
+            String format = "0" + "." +
+                    "0".repeat(decimalPlaces);
+            DecimalFormat formatter = new DecimalFormat(format);
             formatter.setRoundingMode(RoundingMode.HALF_UP);
 
             currentDist = formatter.format(distance);
@@ -48,7 +45,7 @@ public class reachElement extends AbstractHudElement {
     }
 
     @Override
-    public void render(GuiGraphics context, float deltaTicks) {
+    public void render(GuiGraphicsExtractor context, float deltaTicks) {
         if (client.player == null) return;
         String text = getText();
         int textWidth = client.font.width(text);

@@ -3,9 +3,10 @@ package net.notnightsky.skyutils.gui.screen.menus;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.util.CommonColors;
+import org.jetbrains.annotations.UnknownNullability;
 
 public class DropdownMenu {
 
@@ -33,7 +34,7 @@ public class DropdownMenu {
     public int getX() { return x; }
     public int getY() { return y; }
 
-    public void render(GuiGraphics context, int mouseX, int mouseY) {
+    public void render(@UnknownNullability GuiGraphicsExtractor context, int mouseX, int mouseY) {
         context.fill(x, y, x + WIDTH, y + getHeight(), 0xFF1A1A1A);
         context.fill(x, y, x + WIDTH, y + 1, 0xFF555555);
         context.fill(x, y + getHeight() - 1, x + WIDTH, y + getHeight(), 0xFF555555);
@@ -49,7 +50,7 @@ public class DropdownMenu {
                 context.fill(x + 1, optionY, x + WIDTH - 1, optionY + OPTION_HEIGHT, 0xFF2A2A2A);
             }
 
-            context.drawString(client.font, options.get(i).label(),
+            context.text(client.font, options.get(i).label(),
                     x + PADDING, optionY + 2, hovered ? CommonColors.WHITE : CommonColors.TEXT_GRAY, false);
         }
     }

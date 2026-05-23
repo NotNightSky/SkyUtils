@@ -1,8 +1,7 @@
 package net.notnightsky.skyutils.gui.hud.elements;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
-import net.notnightsky.skyutils.gui.hud.HudElement;
 
 public class CoordinateElement extends AbstractHudElement {
     private String getText() {
@@ -13,7 +12,7 @@ public class CoordinateElement extends AbstractHudElement {
     }
 
     @Override
-    public void render(GuiGraphics context, float deltaTicks) {
+    public void render(GuiGraphicsExtractor context, float deltaTicks) {
         if (client.player == null) return;
         String text = getText();
         int textWidth = client.font.width(text);

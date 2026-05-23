@@ -31,7 +31,7 @@ public class chatScreenMixin {
                     String coords = String.format("%.0f, %.0f, %.0f",
                             client.player.getX(), client.player.getY(), client.player.getZ());
                     client.keyboardHandler.setClipboard(coords);
-                    client.player.displayClientMessage(Component.translatable("ChatCoords"), false);
+                    client.player.sendOverlayMessage(Component.translatable("ChatCoords"));
 
                     button.setFocused(false);
                 }

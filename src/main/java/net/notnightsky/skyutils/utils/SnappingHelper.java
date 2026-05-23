@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class SnappingHelper {
 
@@ -112,7 +112,7 @@ public class SnappingHelper {
         return null;
     }
 
-    public void renderSnaps(GuiGraphics context) {
+    public void renderSnaps(GuiGraphicsExtractor context) {
         Integer snapX = getRawXSnap();
         Integer snapY = getRawYSnap();
 

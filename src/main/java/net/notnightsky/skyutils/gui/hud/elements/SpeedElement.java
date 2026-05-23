@@ -1,10 +1,9 @@
 package net.notnightsky.skyutils.gui.hud.elements;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import net.notnightsky.skyutils.gui.hud.HudElement;
 
 public class SpeedElement extends AbstractHudElement {
 
@@ -15,7 +14,7 @@ public class SpeedElement extends AbstractHudElement {
     }
 
     @Override
-    public void render(GuiGraphics context, float deltaTicks) {
+    public void render(GuiGraphicsExtractor context, float deltaTicks) {
         LocalPlayer player = client.player;
         if (player == null) return;
 

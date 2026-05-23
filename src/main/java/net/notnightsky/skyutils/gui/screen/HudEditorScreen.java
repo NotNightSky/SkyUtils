@@ -1,7 +1,7 @@
 package net.notnightsky.skyutils.gui.screen;
 
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -80,7 +80,7 @@ public class HudEditorScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
         context.fill(0, 0, width, height, 0x80000000);
 
         for (HudElement element : HudManager.getAll()) {
@@ -136,15 +136,15 @@ public class HudEditorScreen extends Screen {
 
         String title = "HUD Editor";
         String hint = "Drag to reposition and Right-click to open options";
-        context.drawString(minecraft.font, title,
+        context.text(minecraft.font, title,
                 width / 2 - minecraft.font.width(title) / 2, 5, CommonColors.WHITE, false);
-        context.drawString(minecraft.font, hint,
+        context.text(minecraft.font, hint,
                 width / 2 - minecraft.font.width(hint) / 2, 16, CommonColors.TEXT_GRAY, false);
 
-        super.render(context, mouseX, mouseY, delta);
+        super.extractRenderState(context, mouseX, mouseY, delta);
     }
 
-    private void renderPanelButton(GuiGraphics context, int mouseX, int mouseY) {
+    private void renderPanelButton(GuiGraphicsExtractor context, int mouseX, int mouseY) {
         boolean hovered = mouseX >= panelButtonX && mouseX <= panelButtonX + panelButtonWidth
                 && mouseY >= panelButtonY && mouseY <= panelButtonY + panelButtonHeight;
         int bgColor = hovered ? 0xFF3A3A3A : 0xFF1A1A1A;
@@ -156,16 +156,16 @@ public class HudEditorScreen extends Screen {
 
         String text = ">";
         int textWidth = minecraft.font.width(text);
-        context.drawString(minecraft.font, text, panelButtonX + (panelButtonWidth - textWidth) / 2, panelButtonY + (panelButtonHeight - 8) / 2, CommonColors.WHITE, false);
+        context.text(minecraft.font, text, panelButtonX + (panelButtonWidth - textWidth) / 2, panelButtonY + (panelButtonHeight - 8) / 2, CommonColors.WHITE, false);
     }
 
-    private void renderPanel(GuiGraphics context, int mouseX, int mouseY, int panelOffset) {
+    private void renderPanel(GuiGraphicsExtractor context, int mouseX, int mouseY, int panelOffset) {
         int panelX = width - panelWidth + panelOffset;
         context.fill(panelX, 0, width, height, 0xAA1A1A1A);
         context.fill(panelX - 1, 0, panelX, height, 0xAA555555);
 
         String title = "Available Elements";
-        context.drawString(minecraft.font, title, panelX + 5, 5, CommonColors.WHITE, false);
+        context.text(minecraft.font, title, panelX + 5, 5, CommonColors.WHITE, false);
 
         int y = 25;
         for (HudElement element : HudManager.getAll()) {
@@ -179,18 +179,18 @@ public class HudEditorScreen extends Screen {
                 context.fill(panelX + 2, y + 15, width - 2, y + 16, outlineColor);
                 context.fill(panelX + 2, y, panelX + 3, y + 16, outlineColor);
 
-                context.drawString(minecraft.font, element.getPlaceholderText(), panelX + 5, y + 3, CommonColors.TEXT_GRAY, false);
+                context.text(minecraft.font, element.getPlaceholderText(), panelX + 5, y + 3, CommonColors.TEXT_GRAY, false);
 
                 y += 20;
             }
         }
 
         if (y == 25) {
-            context.drawString(minecraft.font, "None", panelX + 5, 25, CommonColors.GRAY, false);
+            context.text(minecraft.font, "None", panelX + 5, 25, CommonColors.GRAY, false);
         }
     }
 
-    private void renderPlaceholder(GuiGraphics context, HudElement element) {
+    private void renderPlaceholder(GuiGraphicsExtractor context, HudElement element) {
         String text = element.getPlaceholderText();
         int textWidth = minecraft.font.width(text);
 
@@ -202,10 +202,10 @@ public class HudEditorScreen extends Screen {
                 element.getX() + textWidth + 1, element.getY() + element.getHeight(),
                 bgColor
         );
-        context.drawString(minecraft.font, text, element.getX(), element.getY(), textColor, false);
+        context.text(minecraft.font, text, element.getX(), element.getY(), textColor, false);
     }
 
-    private void drawHighlight(GuiGraphics context, HudElement element, int mouseX, int mouseY) {
+    private void drawHighlight(GuiGraphicsExtractor context, HudElement element, int mouseX, int mouseY) {
         int x1 = element.getX() - 2;
         int y1 = element.getY() - 2;
         int x2 = 0;

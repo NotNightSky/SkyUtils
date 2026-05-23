@@ -2,13 +2,13 @@ package net.notnightsky.skyutils.gui.hud.elements;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class IrlTimeElement extends AbstractHudElement{
     private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Override
-    public void render(GuiGraphics context, float deltaTicks) {
+    public void render(GuiGraphicsExtractor context, float deltaTicks) {
         String text = timeFormat.format(new Date());
         int textWidth = client.font.width(text);
         drawBackground(context, textWidth);

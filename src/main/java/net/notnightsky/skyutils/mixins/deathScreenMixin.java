@@ -5,7 +5,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.network.chat.Component;
 import net.notnightsky.skyutils.config.modConfig;
-//import net.notnightsky.skyutils.modules.coords.deathCoords.deathCoordWiget;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,7 +22,7 @@ public abstract class deathScreenMixin {
                     String coords = String.format("%.0f, %.0f, %.0f",
                             client.player.getX(), client.player.getY(), client.player.getZ());
                     client.keyboardHandler.setClipboard(coords);
-                    client.player.displayClientMessage(Component.literal("Death coordinates copied to clipboard"), false);
+                    client.player.sendOverlayMessage(Component.literal("Death coordinates copied to clipboard"));
 
                     button.setFocused(false);
                 }

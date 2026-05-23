@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class HudManager {
 
@@ -41,7 +41,7 @@ public class HudManager {
     /**
      * Render all enabled HUD elements.
      */
-    public static void renderAll(GuiGraphics context, float deltaTicks) {
+    public static void renderAll(GuiGraphicsExtractor context, float deltaTicks) {
         Minecraft client = Minecraft.getInstance();
         int screenWidth = client.getWindow().getGuiScaledWidth();
         int screenHeight = client.getWindow().getGuiScaledHeight();

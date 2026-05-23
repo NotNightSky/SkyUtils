@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ScreenEffectRendererMixin {
 
     @Inject(method = "renderFire", at = @At(value = "HEAD", target = "Lnet/minecraft/client/renderer/ScreenEffectRenderer;renderFire(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V"))
-    private static void skyutils$lowFire(PoseStack matrices, MultiBufferSource vertexConsumers, TextureAtlasSprite sprite, CallbackInfo ci) {
+    private static void skyutils$lowFire(PoseStack poseStack, MultiBufferSource bufferSource, TextureAtlasSprite sprite, CallbackInfo ci) {
         if(modConfig.lowFire){
-            matrices.translate(0, modConfig.fireTranslate * -1, 0);
+            poseStack.translate(0, modConfig.fireTranslate * -1, 0);
         }
     }
 }

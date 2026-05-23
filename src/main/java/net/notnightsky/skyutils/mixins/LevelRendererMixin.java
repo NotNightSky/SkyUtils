@@ -16,7 +16,7 @@ public abstract class LevelRendererMixin {
 //        int newI = modConfig.outlinecolor.getRGB();
 //        original.call(instance, matrices, vertexConsumer, x, y, z, state, newI);
 //    }
-    @ModifyArgs(method = "renderBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDLnet/minecraft/client/renderer/state/BlockOutlineRenderState;IF)V"))
+    @ModifyArgs(method = "renderBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderHitOutline(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDLnet/minecraft/client/renderer/state/level/BlockOutlineRenderState;IF)V"))
     private void skyutils$outlinecolor(Args args){
         int newI = modConfig.outlinecolor.getRGB();
         args.set(6, newI);

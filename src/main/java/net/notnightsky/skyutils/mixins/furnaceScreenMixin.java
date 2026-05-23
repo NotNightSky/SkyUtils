@@ -1,6 +1,6 @@
 package net.notnightsky.skyutils.mixins;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.ContainerData;
@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AbstractFurnaceScreen.class)
 public abstract class furnaceScreenMixin {
 
-    @Inject(method = "renderBg", at = @At("TAIL"))
-    private void skyutils$furnaceUtil(GuiGraphics context, float deltaTicks, int mouseX, int mouseY, CallbackInfo ci) {
+    @Inject(method = "extractBackground", at = @At("TAIL"))
+    private void skyutils$furnaceUtil(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         if (modConfig.furnaceToolTip){
             AbstractFurnaceScreen<?> screen = (AbstractFurnaceScreen<?>) (Object) this;
             AbstractFurnaceMenu handler = screen.getMenu();
@@ -36,7 +36,7 @@ public abstract class furnaceScreenMixin {
 
             furnaceCalculations.FurnaceInfo info = furnaceCalculations.fromProperties(fuelRemaining, fuelTime, cookElapsed, cookTime, totalItemsToSmelt, 0);
 
-            furnaceGui.renderTooltipIfHovered(context, screen, info, mouseX, mouseY);
+            furnaceGui.renderTooltipIfHovered(graphics, screen, info, mouseX, mouseY);
         }
     }
 }
