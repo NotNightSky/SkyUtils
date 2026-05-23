@@ -68,7 +68,7 @@ processResources {
 }
 
 loom {
-    accessWidenerPath.set(file("src/main/resources/skyutils.accesswidener"))
+    accessWidenerPath.set(file("src/main/resources/skyutils.classtweaker"))
 }
 
 def targetJavaVersion = 25

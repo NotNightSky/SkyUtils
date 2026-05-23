@@ -1,0 +1,11 @@
+classTweaker v1 official
+
+# For AbstractFurnaceMenu.data field (used in furnaceScreenMixin.java)
+accessible field net/minecraft/world/inventory/AbstractFurnaceMenu data Lnet/minecraft/world/inventory/ContainerData;
+
+# For addRenderableWidget method on Screen (used in deathScreenMixin.java and chatScreenMixin.java)
+accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
+
+# For AbstractContainerScreen.leftPos and topPos fields (used in furnaceGui.java)
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen leftPos I
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen topPos I

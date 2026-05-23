@@ -31,7 +31,7 @@
     "skyutils.mixins.json"
   ],
 
-  "accessWidener": "skyutils.accesswidener",
+  "accessWidener": "skyutils.classtweaker",
 
   "depends": {
     "fabricloader": ">=$loader_version",
